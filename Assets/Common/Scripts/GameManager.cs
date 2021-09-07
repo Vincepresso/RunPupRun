@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour {
     public CinemachineVirtualCamera cmBaobaogo;
     public CinemachineVirtualCamera cmMero;
     public float cameraSwitchTime;
+    public float delayBeforeRunningTime;
 
     public static GameManager current;
     private void Awake() {
@@ -28,6 +29,8 @@ public class GameManager : MonoBehaviour {
         Debug.Log("Panning camera to Baobaogo");
         cmMero.Priority = 0;
         cmBaobaogo.Priority = 1;
+        yield return new WaitForSeconds(delayBeforeRunningTime);
+        baobaogo.GetComponent<Baobaogo>().gameBegin = true;
     }
     private void ActorDies(GameObject actor) {
         if(actor.CompareTag("Player")) {
