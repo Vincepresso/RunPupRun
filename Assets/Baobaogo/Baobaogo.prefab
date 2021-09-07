@@ -413,10 +413,12 @@ GameObject:
   - component: {fileID: 7729157028011158589}
   - component: {fileID: 8004109912371830358}
   - component: {fileID: 7274085670989119782}
-  - component: {fileID: 6165694198702493285}
   - component: {fileID: 6403277391348600672}
   - component: {fileID: 1561216941361693468}
   - component: {fileID: 7450177486106985806}
+  - component: {fileID: 6165694198702493285}
+  - component: {fileID: 823766142347770632}
+  - component: {fileID: 5653919728829735288}
   m_Layer: 11
   m_Name: Baobaogo
   m_TagString: Player
@@ -541,37 +543,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &6165694198702493285
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8611544467629017088}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b2f93c7c58694a48ac3e6a3ad839292, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 5
-  jumpForce: 500
-  defaultMultiplier: 1
-  animator: {fileID: 7274085670989119782}
-  rb: {fileID: 6403277391348600672}
-  isGrounded: 0
-  groundCheck: {fileID: 4484381880921913468}
-  groundCheckRadius: 0.5
-  groundCheckLayerMask:
-    serializedVersion: 2
-    m_Bits: 256
-  jumpDelay: 1.5
-  fallThreshold: -15
-  isInvincible: 0
-  speedIncreaseFactor: 1
-  speedIncreaseValue: 1
-  speedIncreaseTime: 30
-  audioSource: {fileID: 7450177486106985806}
-  footstepsSfx: {fileID: 8300000, guid: 62858fb4b6a6642499cd47c14dc1fa61, type: 3}
 --- !u!50 &6403277391348600672
 Rigidbody2D:
   serializedVersion: 4
@@ -705,3 +676,66 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6165694198702493285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8611544467629017088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b2f93c7c58694a48ac3e6a3ad839292, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  speedMultiplier: 0
+  jumpForce: 500
+  jumpMultiplier: 0
+  defaultMultiplier: 1
+  animator: {fileID: 7274085670989119782}
+  rb: {fileID: 6403277391348600672}
+  isGrounded: 0
+  groundCheck: {fileID: 4484381880921913468}
+  groundCheckRadius: 0.5
+  groundCheckLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
+  jumpDelay: 1.5
+  fallThreshold: -15
+  isInvincible: 0
+  speedIncreaseFactor: 1
+  speedIncreaseValue: 1
+  speedIncreaseTime: 30
+  gameBegin: 0
+  baobaogoItem: {fileID: 823766142347770632}
+  baobaogoSfx: {fileID: 5653919728829735288}
+--- !u!114 &823766142347770632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8611544467629017088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 582d5ad11ea0928499ebcbce1394a350, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5653919728829735288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8611544467629017088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab786514ad196f5458c63594bd112cbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioSource: {fileID: 7450177486106985806}
+  footstepsSfx: {fileID: 8300000, guid: 62858fb4b6a6642499cd47c14dc1fa61, type: 3}
+  jumpSfx: {fileID: 8300000, guid: 02f8e916c0a4ec64a862cf3cb8d68905, type: 3}
+  highJumpSfx: {fileID: 8300000, guid: 0785a5caf28ab5e4aa2a9524d09995d6, type: 3}
+  itemPickup: {fileID: 8300000, guid: 4359751fdc6f46b489b828b2337c0ecc, type: 3}

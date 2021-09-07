@@ -18,11 +18,15 @@ public class ItemManager : MonoBehaviour {
         baobaogo.GetComponent<Baobaogo>().ApplyItem(item);
         foreach(GameObject itemSlotObject in itemSlotList) {
             ItemSlot itemSlot = itemSlotObject.GetComponent<ItemSlot>();
-            if(itemSlot.item == null) {
+            if(itemSlot.item != null && itemSlot.item.data.typeId == item.data.typeId) {
+                itemSlot.UnuseSlot();
                 itemSlot.UseSlot(item);
                 return;
-            } else if(itemSlot.item.data.typeId == item.data.typeId) {
-                itemSlot.UnuseSlot();
+            }
+        }
+        foreach(GameObject itemSlotObject in itemSlotList) {
+            ItemSlot itemSlot = itemSlotObject.GetComponent<ItemSlot>();
+            if(itemSlot.item == null) {
                 itemSlot.UseSlot(item);
                 return;
             }
