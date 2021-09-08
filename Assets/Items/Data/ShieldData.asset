@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   typeId: 1
   spawnWeight: 10
-  effectiveTime: 3
+  effectiveTime: 5
   multiplier: 0
   descriptions: []

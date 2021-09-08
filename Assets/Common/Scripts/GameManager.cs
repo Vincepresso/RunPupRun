@@ -5,21 +5,34 @@ using Cinemachine;
 
 public class GameManager : MonoBehaviour {
 
-    public GameObject baobaogo;
-    public GameObject mero;
+    public GameObject baobaogoObj;
+    public GameObject meroObj;
+    private Baobaogo baobaogo;
+    private Mero mero;
     public CinemachineVirtualCamera cmBaobaogo;
     public CinemachineVirtualCamera cmMero;
     public float cameraSwitchTime;
     public float delayBeforeRunningTime;
-
+    public float meroForwardDistance;
+    public float meroBackwardDistance;
+    public float meroTeleportXDistance;
+    public float meroTeleportYDistance;
     public static GameManager current;
     private void Awake() {
         current = this;
     }
     void Start() {
         ActorEvents.current.onCliffEnter += ActorDies;
-        ActorEvents.current.onMeroTouch += ActorDies;
+        ActorEvents.current.onMeroTouch += ActorHitByMero;
         StartCoroutine(ChangeCamera());
+        baobaogo = baobaogoObj.GetComponent<Baobaogo>();
+        mero = meroObj.GetComponent<Mero>();
+    }
+    void Update() {
+        // This is to Clamp Mero's position relative to Baobaogo
+        if(meroObj.transform.position.x > baobaogoObj.transform.position.x + meroForwardDistance || meroObj.transform.position.x < baobaogoObj.transform.position.x - meroBackwardDistance) {
+            meroObj.transform.position = new Vector3(baobaogoObj.transform.position.x - meroTeleportXDistance, baobaogoObj.transform.position.y + meroTeleportYDistance, meroObj.transform.position.z);
+        }
     }
     private IEnumerator ChangeCamera() {
         Debug.Log("Panning camera to Mero");
@@ -32,14 +45,22 @@ public class GameManager : MonoBehaviour {
         yield return new WaitForSeconds(delayBeforeRunningTime);
         baobaogo.GetComponent<Baobaogo>().gameBegin = true;
     }
-    private void ActorDies(GameObject actor) {
+    private void ActorHitByMero(GameObject actor) {
         if(actor.CompareTag("Player")) {
-            Debug.Log("Baobaogo got hit/fell!");
-            Time.timeScale = 0;
+            if(baobaogo.isInvincible) {
+                mero.Stagger();
+                baobaogo.BounceForward();
+            } else {
+                ActorDies(actor);
+            }
         }
+    }
+    private void ActorDies(GameObject actor) {
+        Debug.Log(actor.name + " pass out!");
+        Time.timeScale = 0;
     }
     void OnDestroy() {
         ActorEvents.current.onCliffEnter -= ActorDies;
-        ActorEvents.current.onMeroTouch -= ActorDies;
+        ActorEvents.current.onMeroTouch -= ActorHitByMero;
     }
 }

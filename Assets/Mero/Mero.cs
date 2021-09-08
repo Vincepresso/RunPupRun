@@ -12,30 +12,54 @@ public class Mero : MonoBehaviour {
     public float speedIncreaseFactor;
     public float speedIncreaseValue;
     public float speedIncreaseTime;
+    public Transform bounceSource;
+    public float bounceForce;
+    public Animator animator;
+    public float staggerTime;
     void Start() {
         InvokeRepeating("IncreaseSpeed", speedIncreaseTime, speedIncreaseTime);
+        StartMove();
     }
     void Update() {
         isGrounded = false;
         isGrounded = IsTouchGround();
-        if(isGrounded) {
-            rb.velocity = new Vector2(1f * speed, rb.velocity.y);
+        Run();
+    }
+    private void Run() {
+        if(isGrounded && animator.GetBool("Move")) {
+            rb.velocity = new Vector2(speed, rb.velocity.y);
         }
     }
-
-    public bool IsTouchGround() {
+    private bool IsTouchGround() {
         Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, groundCheckRadius, groundCheckLayerMask);
         for (int i = 0; i < colliders.Length; i++) {
             if (colliders[i].gameObject != gameObject) {
                 return true;
             }
         }
-        
         return false;
     }
     private void IncreaseSpeed() {
         speed += speedIncreaseFactor * speedIncreaseValue;
         Debug.Log(this.name + " speed is now " + speed);
+    }
+    public void Stagger() {
+        StartCoroutine(StaggerEnumerator());
+    }
+    public IEnumerator StaggerEnumerator() {
+        BounceBackward();
+        StopMove();
+        yield return new WaitForSeconds(staggerTime);
+        StartMove();
+    }
+    public void BounceBackward() {
+        rb.AddForceAtPosition(-1 * new Vector2(bounceForce, bounceForce), new Vector2(bounceSource.position.x, bounceSource.position.y));
+    }
+    public void StartMove() {
+        animator.SetBool("Move", true);
+    }
+    public void StopMove() {
+        animator.SetBool("Move", false);
     }
     void OnTriggerEnter2D(Collider2D collider) {
         ActorEvents.current.MeroTouch(collider.gameObject);
