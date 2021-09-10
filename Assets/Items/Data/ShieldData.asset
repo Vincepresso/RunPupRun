@@ -13,7 +13,17 @@ MonoBehaviour:
   m_Name: ShieldData
   m_EditorClassIdentifier: 
   typeId: 1
-  spawnWeight: 10
-  effectiveTime: 5
+  spawnWeight: 50
+  effectiveTime: 10
   multiplier: 0
-  descriptions: []
+  descriptions:
+  - Shield forge by a Dragon
+  - Shield Pup Shield
+  - Toughnut!
+  - I am invincible!
+  - Bandaid not required
+  - UFC Champion
+  - Hey! wanna fight!
+  - You do not talk about Shield club
+  - Ironskin
+  - Are you Gung-Ho Ben Grimm?

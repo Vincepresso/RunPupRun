@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour {
     public float meroBackwardDistance;
     public float meroTeleportXDistance;
     public float meroTeleportYDistance;
+    public Console consoleUI;
     public static GameManager current;
     private void Awake() {
         current = this;
@@ -44,6 +45,7 @@ public class GameManager : MonoBehaviour {
         cmBaobaogo.Priority = 1;
         yield return new WaitForSeconds(delayBeforeRunningTime);
         baobaogo.GetComponent<Baobaogo>().gameBegin = true;
+        consoleUI.UpdateText("Press Space, Left Mouse, or Tap to Jump. That's all", 7f, 3f);
     }
     private void ActorHitByMero(GameObject actor) {
         if(actor.CompareTag("Player")) {

@@ -8,8 +8,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1120852701983365997, guid: f5fb75197ad1f46448b53b4239388685, type: 3}
+      propertyPath: deactivateForMero
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1120852701983365997, guid: f5fb75197ad1f46448b53b4239388685, type: 3}
       propertyPath: itemSpawnProbability
-      value: 100
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1120852701983365997, guid: f5fb75197ad1f46448b53b4239388685, type: 3}
+      propertyPath: trapSpawnProbability
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1120852701983365997, guid: f5fb75197ad1f46448b53b4239388685, type: 3}
+      propertyPath: enemySpawnProbability
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1456804088228944047, guid: f5fb75197ad1f46448b53b4239388685, type: 3}
       propertyPath: m_Name

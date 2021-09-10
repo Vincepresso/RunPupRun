@@ -34,15 +34,24 @@ public class Baobaogo : MonoBehaviour {
     public float bounceForce;
     public Transform bounceSource;
     public bool passOut;
+    public HashSet<int> activeTrapTypes;
+    public bool isStaggered;
+    public Transform staggerSource;
+    public float staggerForce;
+    public float staggerTime;
 
     // Private Access Modifier
     private bool isJumpInitiated;
     private float nextJumpTime = 0f;
+    private bool isJumping;
+    private bool canJump;
 
     void Start() {
+        canJump = true;
         speedMultiplier = defaultMultiplier;
         jumpMultiplier = defaultMultiplier;
         activeItemTypes = new HashSet<int>();
+        activeTrapTypes = new HashSet<int>();
         passOut = false;
         gameBegin = false;
         InvokeRepeating("IncreaseSpeed", speedIncreaseTime, speedIncreaseTime);
@@ -54,40 +63,36 @@ public class Baobaogo : MonoBehaviour {
             Run();
             Jump();
         }
-        ShieldParticle();
-        // RoseParticle();
+        RoseItemEffect();
+        ShieldItemEffect();
+        BootsItemEffect();
         Fall();
     }
     private void Run() {
-        if(isGrounded) {
+        if(isGrounded && !isStaggered) {
             animator.SetBool("Run", true);
             animator.SetBool("IsGrounded", true);
             rb.velocity = new Vector2(speed * speedMultiplier, rb.velocity.y);
-            if(activeItemTypes.Contains(2)) {
-                bootsParticle.SetActive(true);
-            } else {
-                bootsParticle.SetActive(false);
-            }
-        } else {
-            bootsParticle.SetActive(false);
+        } else if(!isStaggered) {
             animator.SetBool("Run", false);
             animator.SetBool("IsGrounded", false);
         }
     }
     private void Jump() {
         bool jump = Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0);
-        if(isGrounded && jump && Time.time > jumpDelay) {
+        if(isGrounded && jump && canJump && !isStaggered) {
+            isJumping = true;
             isGrounded = false;
-            if(activeItemTypes.Contains(0)) {
-                roseParticle.SetActive(true);
-                baobaogoSfx.PlayHighJumpSfx();
-            } else {
-                roseParticle.SetActive(false);
-                baobaogoSfx.PlayJumpSfx();
-            }
             rb.AddForce(new Vector2(0f, jumpForce * jumpMultiplier));
             nextJumpTime = Time.time + jumpDelay;
+            canJump = false;
+            Invoke("ResetJump", jumpDelay);
+        } else {
+            isJumping = false;
         }
+    }
+    private void ResetJump() {
+        canJump = true;
     }
     private void Fall() {
         if(transform.position.y <= fallThreshold) {
@@ -114,16 +119,58 @@ public class Baobaogo : MonoBehaviour {
     public void BounceForward() {
         rb.AddForceAtPosition(new Vector2(bounceForce, bounceForce), new Vector2(bounceSource.position.x, bounceSource.position.y));
     }
-    private void ShieldParticle() {
+    private void RoseItemEffect() {
+        if(isJumping && activeItemTypes.Contains(0)) {
+            baobaogoSfx.PlayHighJumpSfx();
+        } else if(isJumping && !activeItemTypes.Contains(0)) {
+            baobaogoSfx.PlayJumpSfx();
+        }
+        if(activeItemTypes.Contains(0)) {
+            roseParticle.SetActive(true);
+        } else {
+            roseParticle.SetActive(false);
+        }
+    }
+    private void ShieldItemEffect() {
         if(isInvincible || activeItemTypes.Contains(1)) {
             shieldParticle.SetActive(true);
         } else {
             shieldParticle.SetActive(false);
         }
     }
-    private void RoseParticle() {
-        if(isGrounded && activeItemTypes.Contains(0)) {
-            roseParticle.SetActive(false);
+    private void BootsItemEffect() {
+        if(isGrounded && activeItemTypes.Contains(2)) {
+            bootsParticle.SetActive(true);
+        } else {
+            bootsParticle.SetActive(false);
+        }       
+    }
+    public void CobwebEnter(Cobweb cobweb) {
+        if(!activeTrapTypes.Contains(cobweb.typeId)) {
+            speedMultiplier += cobweb.multiplier;
+            GetComponent<Animator>().speed += cobweb.multiplier;
+            activeTrapTypes.Add(cobweb.typeId);
         }
     }
+    public void CobwebExit(Cobweb cobweb) {
+        if(activeTrapTypes.Contains(cobweb.typeId)) {
+            speedMultiplier -= cobweb.multiplier;
+            GetComponent<Animator>().speed -= cobweb.multiplier;
+            activeTrapTypes.Remove(cobweb.typeId);
+        }
+    }
+
+    public void Stagger() {
+        StartCoroutine(StaggerCoroutine());
+    }
+
+    private IEnumerator StaggerCoroutine() {
+        isStaggered = true;
+        animator.SetBool("Stagger", true);
+        rb.AddForceAtPosition(new Vector2(-1f * staggerForce, staggerForce), new Vector2(staggerSource.position.x, staggerSource.position.y));
+        yield return new WaitForSeconds(staggerTime);
+        animator.SetBool("Stagger", false);
+        isStaggered = false;
+    }
+
 }

@@ -13,7 +13,17 @@ MonoBehaviour:
   m_Name: RoseData
   m_EditorClassIdentifier: 
   typeId: 0
-  spawnWeight: 20
+  spawnWeight: 50
   effectiveTime: 5
   multiplier: 1.5
-  descriptions: []
+  descriptions:
+  - Boing!
+  - World record high jumper!
+  - Don't jump too high, you'll fly!
+  - Your calf muscle must be ripped!
+  - Gravity is out on a break
+  - Make sure to come down to the ground
+  - Jump Pup Jump
+  - FYI, max Earth escape velocity is 11.2 km/s
+  - Future astronaut!
+  - Watch where you're landing!

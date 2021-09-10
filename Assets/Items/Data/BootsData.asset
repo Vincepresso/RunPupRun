@@ -16,4 +16,14 @@ MonoBehaviour:
   spawnWeight: 50
   effectiveTime: 5
   multiplier: 1.5
-  descriptions: []
+  descriptions:
+  - Gotta go fast!
+  - Got boots with wings, but can't fly?
+  - Vroooom Vroooom!
+  - Godspeed!
+  - To Infinity and Beyond!
+  - Slow is not in my dictionary
+  - You're the turtle, I am the rabbit
+  - Wow, you're fast!
+  - Slowdown there champ, speed limit is only 30 mph
+  - Run Pup Run!
