@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Map
   - Mero
+  - Traps
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -20,8 +22,8 @@ TagManager:
   - MeroPath
   - Baobaogo
   - Boundary
-  - 
-  - 
+  - Traps
+  - Enemy
   - 
   - 
   - 

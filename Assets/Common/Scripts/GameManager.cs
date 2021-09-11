@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
@@ -18,6 +19,8 @@ public class GameManager : MonoBehaviour {
     public float meroTeleportXDistance;
     public float meroTeleportYDistance;
     public Console consoleUI;
+    public Text scoreText;
+    private float scoreValue;
     public static GameManager current;
     private void Awake() {
         current = this;
@@ -28,12 +31,18 @@ public class GameManager : MonoBehaviour {
         StartCoroutine(ChangeCamera());
         baobaogo = baobaogoObj.GetComponent<Baobaogo>();
         mero = meroObj.GetComponent<Mero>();
+        scoreValue = 0f;
     }
     void Update() {
         // This is to Clamp Mero's position relative to Baobaogo
         if(meroObj.transform.position.x > baobaogoObj.transform.position.x + meroForwardDistance || meroObj.transform.position.x < baobaogoObj.transform.position.x - meroBackwardDistance) {
             meroObj.transform.position = new Vector3(baobaogoObj.transform.position.x - meroTeleportXDistance, baobaogoObj.transform.position.y + meroTeleportYDistance, meroObj.transform.position.z);
         }
+        if(baobaogo.gameBegin == true) {
+            scoreValue += Time.deltaTime;
+        }
+        int scoreValueInSeconds = (int) scoreValue % 60;
+        scoreText.text = scoreValueInSeconds.ToString();
     }
     private IEnumerator ChangeCamera() {
         Debug.Log("Panning camera to Mero");
