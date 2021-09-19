@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 public class ItemManager : MonoBehaviour {
     public static ItemManager current;
-    public GameObject baobaogo;
+    public Baobaogo baobaogo;
     public GameObject[] itemSlotList;
     public Console consoleUI;
     public float consoleWaitTime;
     public float consoleFadeTime;
+    private Stack<Item> bootStack;
     void Awake() {
         current = this;
     }
@@ -16,7 +17,7 @@ public class ItemManager : MonoBehaviour {
         ItemEvents.current.onItemEffectFinished += HandleItemEffectFinished;
     }
     public void HandleItemPickup(Item item) {
-        baobaogo.GetComponent<Baobaogo>().ApplyItem(item);
+        baobaogo.ApplyItem(item);
         int itemDescriptionIndex = Random.Range(0, item.data.descriptions.Length);
         consoleUI.UpdateText(item.data.descriptions[itemDescriptionIndex], consoleWaitTime, consoleFadeTime);
         foreach(GameObject itemSlotObject in itemSlotList) {

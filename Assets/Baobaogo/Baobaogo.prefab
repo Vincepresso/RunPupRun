@@ -14984,7 +14984,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: 28aa2b43613126e4ebf5ae3a8b44479d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -15223,6 +15223,8 @@ MonoBehaviour:
   staggerSource: {fileID: 785811981076893370}
   staggerForce: 200
   staggerTime: 1
+  gamePaused: 0
+  gameOver: 0
 --- !u!114 &823766142347770632
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15251,4 +15253,5 @@ MonoBehaviour:
   footstepsSfx: {fileID: 8300000, guid: 62858fb4b6a6642499cd47c14dc1fa61, type: 3}
   jumpSfx: {fileID: 8300000, guid: 02f8e916c0a4ec64a862cf3cb8d68905, type: 3}
   highJumpSfx: {fileID: 8300000, guid: 0785a5caf28ab5e4aa2a9524d09995d6, type: 3}
-  itemPickup: {fileID: 8300000, guid: 4359751fdc6f46b489b828b2337c0ecc, type: 3}
+  itemPickupSfx: {fileID: 8300000, guid: 4359751fdc6f46b489b828b2337c0ecc, type: 3}
+  hitSfx: {fileID: 8300000, guid: ef508c878e560fc44851da95e4a36d04, type: 3}

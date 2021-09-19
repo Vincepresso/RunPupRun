@@ -16,7 +16,12 @@ public class Mero : MonoBehaviour {
     public float bounceForce;
     public Animator animator;
     public float staggerTime;
+    public bool gameOver;
+    public AudioSource rollAudioSource;
+    public AudioSource laughAudioSource;
+    public AudioSource meroIsClosedAudioSource;
     void Start() {
+        gameOver = false;
         InvokeRepeating("IncreaseSpeed", speedIncreaseTime, speedIncreaseTime);
         StartMove();
     }

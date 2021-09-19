@@ -7,7 +7,8 @@ public class BaobaogoSfx : MonoBehaviour {
     public AudioClip footstepsSfx;
     public AudioClip jumpSfx;
     public AudioClip highJumpSfx;
-    public AudioClip itemPickup;
+    public AudioClip itemPickupSfx;
+    public AudioClip hitSfx;
     public void PlayFootstepsSfx() {
         audioSource.PlayOneShot(footstepsSfx);
     }
@@ -18,6 +19,9 @@ public class BaobaogoSfx : MonoBehaviour {
         audioSource.PlayOneShot(highJumpSfx);
     }
     public void PlayItemPickupSfx() {
-        audioSource.PlayOneShot(itemPickup);
+        audioSource.PlayOneShot(itemPickupSfx);
+    }
+    public void PlayHitSfx() {
+        audioSource.PlayOneShot(hitSfx);
     }
 }

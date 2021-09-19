@@ -6,10 +6,8 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
-    public GameObject baobaogoObj;
-    public GameObject meroObj;
-    private Baobaogo baobaogo;
-    private Mero mero;
+    public Baobaogo baobaogo;
+    public Mero mero;
     public CinemachineVirtualCamera cmBaobaogo;
     public CinemachineVirtualCamera cmMero;
     public float cameraSwitchTime;
@@ -18,31 +16,54 @@ public class GameManager : MonoBehaviour {
     public float meroBackwardDistance;
     public float meroTeleportXDistance;
     public float meroTeleportYDistance;
-    public Console consoleUI;
-    public Text scoreText;
+    public GameObject consoleUI;
+    public GameObject scoreUI;
+    public GameObject pauseUI;
+    public GameObject gameOverUI;
+    public float gameOverTime;
+    private Text scoreText;
     private float scoreValue;
+    public bool isPaused;
     public static GameManager current;
     private void Awake() {
         current = this;
     }
     void Start() {
-        ActorEvents.current.onCliffEnter += ActorDies;
+        Time.timeScale = 1f;
+        ActorEvents.current.onCliffEnter += ActorFellFromCliff;
         ActorEvents.current.onMeroTouch += ActorHitByMero;
         StartCoroutine(ChangeCamera());
-        baobaogo = baobaogoObj.GetComponent<Baobaogo>();
-        mero = meroObj.GetComponent<Mero>();
+        scoreText = scoreUI.transform.GetChild(0).GetComponent<Text>();
         scoreValue = 0f;
+        scoreText.enabled = false;
+        pauseUI.SetActive(false);
+        gameOverUI.SetActive(false);
+        isPaused = false;
     }
     void Update() {
         // This is to Clamp Mero's position relative to Baobaogo
-        if(meroObj.transform.position.x > baobaogoObj.transform.position.x + meroForwardDistance || meroObj.transform.position.x < baobaogoObj.transform.position.x - meroBackwardDistance) {
-            meroObj.transform.position = new Vector3(baobaogoObj.transform.position.x - meroTeleportXDistance, baobaogoObj.transform.position.y + meroTeleportYDistance, meroObj.transform.position.z);
+        if(mero.transform.position.x > baobaogo.transform.position.x + meroForwardDistance || mero.transform.position.x < baobaogo.transform.position.x - meroBackwardDistance) {
+            mero.transform.position = new Vector3(baobaogo.transform.position.x - meroTeleportXDistance, baobaogo.transform.position.y + meroTeleportYDistance, mero.transform.position.z);
         }
-        if(baobaogo.gameBegin == true) {
+        if(baobaogo.gameBegin == true && !baobaogo.gameOver) {
+            scoreText.enabled = true;
             scoreValue += Time.deltaTime;
+            scoreText.text = scoreValue.ToString("n1");
         }
-        int scoreValueInSeconds = (int) scoreValue % 60;
-        scoreText.text = scoreValueInSeconds.ToString();
+        if(!baobaogo.passOut) {
+            if(Input.GetKeyDown(KeyCode.Escape)) {
+                isPaused = !isPaused;
+            }
+            if(isPaused) {
+                Time.timeScale = 0f;
+                baobaogo.gamePaused = true;
+                pauseUI.SetActive(true);
+            } else {
+                pauseUI.SetActive(false);
+                baobaogo.gamePaused = false;
+                Time.timeScale = 1f;
+            }
+        }
     }
     private IEnumerator ChangeCamera() {
         Debug.Log("Panning camera to Mero");
@@ -53,8 +74,8 @@ public class GameManager : MonoBehaviour {
         cmMero.Priority = 0;
         cmBaobaogo.Priority = 1;
         yield return new WaitForSeconds(delayBeforeRunningTime);
-        baobaogo.GetComponent<Baobaogo>().gameBegin = true;
-        consoleUI.UpdateText("Press Space, Left Mouse, or Tap to Jump. That's all", 7f, 3f);
+        baobaogo.gameBegin = true;
+        consoleUI.GetComponent<Console>().UpdateText("Press Space, Left Mouse, or Tap to Jump. That's all", 7f, 3f);
     }
     private void ActorHitByMero(GameObject actor) {
         if(actor.CompareTag("Player")) {
@@ -66,12 +87,34 @@ public class GameManager : MonoBehaviour {
             }
         }
     }
+    private void ActorFellFromCliff(GameObject actor) {
+        if(actor.CompareTag("Player")) {
+            baobaogo.GetComponent<Rigidbody2D>().gravityScale = 0f;
+            ActorDies(actor);
+        }
+    }
     private void ActorDies(GameObject actor) {
         Debug.Log(actor.name + " pass out!");
-        Time.timeScale = 0;
+        baobaogo.passOut = true;
+        GameOver();
     }
     void OnDestroy() {
-        ActorEvents.current.onCliffEnter -= ActorDies;
+        ActorEvents.current.onCliffEnter -= ActorFellFromCliff;
         ActorEvents.current.onMeroTouch -= ActorHitByMero;
+    }
+    private void GameOver() {
+        StartCoroutine(GameOverCoroutine());
+        mero.gameOver = true;
+        baobaogo.gameOver = true;
+    }
+    private IEnumerator GameOverCoroutine() {
+        yield return new WaitForSeconds(gameOverTime);
+        consoleUI.SetActive(false);
+        scoreUI.SetActive(false);
+        pauseUI.SetActive(false);
+        isPaused = false;
+        gameOverUI.transform.GetChild(1).GetComponent<Text>().text = "Your score is " + scoreText.text;
+        gameOverUI.SetActive(true);
+        Time.timeScale = 0f;
     }
 }

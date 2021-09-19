@@ -39,14 +39,16 @@ public class Baobaogo : MonoBehaviour {
     public Transform staggerSource;
     public float staggerForce;
     public float staggerTime;
+    public bool gamePaused;
+    public bool gameOver;
 
     // Private Access Modifier
     private bool isJumpInitiated;
     private float nextJumpTime = 0f;
     private bool isJumping;
     private bool canJump;
-
     void Start() {
+        gamePaused = false;
         canJump = true;
         speedMultiplier = defaultMultiplier;
         jumpMultiplier = defaultMultiplier;
@@ -67,6 +69,10 @@ public class Baobaogo : MonoBehaviour {
         ShieldItemEffect();
         BootsItemEffect();
         Fall();
+        if(gameOver) {
+            animator.SetBool("Stagger", true);
+            GetComponent<CapsuleCollider2D>().enabled = false;
+        }
     }
     private void Run() {
         if(isGrounded && !isStaggered) {
@@ -80,7 +86,7 @@ public class Baobaogo : MonoBehaviour {
     }
     private void Jump() {
         bool jump = Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0);
-        if(isGrounded && jump && canJump && !isStaggered) {
+        if(isGrounded && jump && canJump && !isStaggered && !gamePaused) {
             isJumping = true;
             isGrounded = false;
             rb.AddForce(new Vector2(0f, jumpForce * jumpMultiplier));
@@ -147,9 +153,9 @@ public class Baobaogo : MonoBehaviour {
     }
     public void CobwebEnter(Cobweb cobweb) {
         if(!activeTrapTypes.Contains(cobweb.typeId)) {
+            activeTrapTypes.Add(cobweb.typeId);
             speedMultiplier += cobweb.multiplier;
             GetComponent<Animator>().speed += cobweb.multiplier;
-            activeTrapTypes.Add(cobweb.typeId);
         }
     }
     public void CobwebExit(Cobweb cobweb) {
@@ -166,11 +172,18 @@ public class Baobaogo : MonoBehaviour {
 
     private IEnumerator StaggerCoroutine() {
         isStaggered = true;
+        baobaogoSfx.PlayHitSfx();
         animator.SetBool("Stagger", true);
         rb.AddForceAtPosition(new Vector2(-1f * staggerForce, staggerForce), new Vector2(staggerSource.position.x, staggerSource.position.y));
         yield return new WaitForSeconds(staggerTime);
         animator.SetBool("Stagger", false);
         isStaggered = false;
+    }
+
+    void OnDestroy() {
+        gameBegin = false;
+        gamePaused = false;
+        gameOver = false;
     }
 
 }
